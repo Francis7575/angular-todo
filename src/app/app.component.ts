@@ -28,6 +28,7 @@ export class AppComponent {
       };
       this.todoList.push(newTodoItem);
       this.newTask = '';
+      this.saveToLocalStorage();
     }
   }
 
@@ -35,6 +36,7 @@ export class AppComponent {
     const todoItem = this.todoList.find((item) => item.id === id);
     if (todoItem) {
       todoItem.completed = !todoItem.completed;
+      this.saveToLocalStorage();
     }
     console.log('succesfully toggled', this.todoList);
   }
@@ -42,5 +44,19 @@ export class AppComponent {
   deleteTask(id: number): void {
     this.todoList = this.todoList.filter((item) => item.id !== id);
     console.log('succesfully deleted', this.todoList);
+    this.saveToLocalStorage();
+  }
+
+  // Save todoList to localStorage
+  saveToLocalStorage(): void {
+    localStorage.setItem('todoList', JSON.stringify(this.todoList));
+  }
+
+  // Get todoList from localStorage
+  ngOnInit(): void {
+    const savedTasks = localStorage.getItem('todoList');
+    if (savedTasks) {
+      this.todoList = JSON.parse(savedTasks);
+    }
   }
 }
